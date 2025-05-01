@@ -193,5 +193,54 @@
       </a>
     </p>
   </footer>
+
+  <script>
+    const interfaceName = document.getElementById('interface');
+    const currentPolicy = document.getElementById('current-policy');
+    const bandwidth = document.getElementById('bandwidth');
+    const clipboardButton = document.querySelector('.clipboard-button');
+    const resultInterface = document.querySelector('.result_type_interface');
+    const resultBandwidth = document.querySelector('.result_type_bandwidth');
+    const resultPolicyInRemove = document.querySelector('.result_type_policy-in-remove');
+    const resultPolicyOutRemove = document.querySelector('.result_type_policy-out-remove');
+    const resultPolicyInAdd = document.querySelector('.result_type_policy-in-add');
+    const resultPolicyOutAdd = document.querySelector('.result_type_policy-out-add');
+    const resultInterfaceShow = document.querySelector('.result_type_interface-show');
+    console.log(bandwidth);
+
+    interfaceName.addEventListener('keyup', () => {
+      resultInterface.textContent = `int GigabitEthernet ${interfaceName.value}\n`;
+      resultInterfaceShow.textContent = `do sh run int GigabitEthernet ${interfaceName.value}\n`;
+    });
+
+    currentPolicy.addEventListener('keyup', () => {
+      resultPolicyInRemove.textContent = `no service-policy input ${currentPolicy.value}_in\n`;
+      resultPolicyOutRemove.textContent = `no service-policy output ${currentPolicy.value}_out\n`;
+    });
+
+    bandwidth.addEventListener('change', () => {
+      resultBandwidth.textContent = `bandwidth ${bandwidth.value}\n`;
+      resultPolicyInAdd.textContent = `service-policy input pr_${bandwidth.value}k_in\n`;
+      resultPolicyOutAdd.textContent = `service-policy output pr_${bandwidth.value}k_out\n`;
+    });
+    
+    clipboardButton.addEventListener('click', copyToClipboard);
+
+    async function copyToClipboard() {
+
+      const resultSummary = 
+        resultInterface.textContent + 
+        resultBandwidth.textContent +
+        resultPolicyInRemove.textContent +
+        resultPolicyOutRemove.textContent +
+        resultPolicyInAdd.textContent +
+        resultPolicyOutAdd.textContent +
+        resultInterfaceShow.textContent;
+
+      await navigator.clipboard.writeText(resultSummary);
+    }
+
+  </script>
+
 </body>
 </html>
